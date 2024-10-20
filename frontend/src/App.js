@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes,  } from 'react-router-dom'; // Update this line
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Login from './components/login/Login';
 import Register from './components/register/Register';
 
@@ -6,21 +6,13 @@ function App() {
     return (
         <Router>
             <div className="App">
-                <Login/>
-            {/* <nav>
-                    <ul>
-                        <li>
-                            <Link to="/login">Login</Link>
-                        </li>
-                        <li>
-                            <Link to="/register">Register</Link>
-                        </li>
-                    </ul>
-                </nav> */}
-                <Routes> {/* Change Switch to Routes */}
-                    <Route path="./login" element={<Login/>} /> {/* Update Route component */}
+                <Routes>
+                    {/* Default route that redirects to /login */}
+                    <Route path="/" element={<Navigate to="/login" />} />
                     
-                    <Route path="./register" element={<Register/>} /> {/* Update Route component */}
+                    {/* Login and Register routes */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                 </Routes>
             </div>
         </Router>

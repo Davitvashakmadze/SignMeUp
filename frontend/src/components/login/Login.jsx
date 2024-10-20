@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import "./Login.scss";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -39,6 +40,7 @@ const Login = () => {
           <button type="submit">Login</button>
         </form>
       </div>
+      <Link to="/register">Don't have an account? Register here</Link>
     </div>
   );
 };
