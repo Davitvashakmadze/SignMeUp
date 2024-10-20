@@ -39,8 +39,9 @@ const Login = () => {
           />
           <button type="submit">Login</button>
         </form>
+        <Link to="/register">Don't have an account? Register here</Link>
       </div>
-      <Link to="/register">Don't have an account? Register here</Link>
+    
     </div>
   );
 };
