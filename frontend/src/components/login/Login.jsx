@@ -1,6 +1,5 @@
-import { useState} from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Login.scss";
 
@@ -11,7 +10,6 @@ const Login = () => {
   const navigate = useNavigate(); // Hook to navigate programmatically
 
   const validateForm = () => {
-    // Basic validation for email and password fields
     if (!email) {
       setError("Email is required");
       return false;
@@ -35,26 +33,32 @@ const Login = () => {
     if (!validateForm()) return; // Validate the form
 
     try {
-        const res = await axios.post("http://localhost:5000/api/auth/login", {
-            email,
-            password,
-        });
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password,
+      });
 
-        // Check for the success property in the response
-        if (res.data.success) {
-            // Navigate to the user page after successful login
-            navigate("/user");
-        } else {
-            setError("Invalid credentials");
-        }
+      // Debugging: Check if response data contains the correct username
+      console.log("Login Response:", res.data);
+
+      // Check if the response contains success and user data
+      if (res.data && res.data.user && res.data.user.username) {
+        // Store the username in localStorage
+        localStorage.setItem("username", res.data.user.username);
+        
+        // Verify localStorage to check if it's being set correctly
+        console.log("Stored Username in localStorage:", localStorage.getItem("username"));
+
+        // Navigate to the user page after successful login
+        navigate("/user");
+      } else {
+        setError("Invalid credentials");
+      }
     } catch (error) {
-        console.error(error.response?.data || "Error logging in");
-        setError("Login failed. Please try again.");
+      console.error(error.response?.data || "Error logging in");
+      setError("Login failed. Please try again.");
     }
-};
-
-
-
+  };
 
   return (
     <div className="login-container-wrapper">
