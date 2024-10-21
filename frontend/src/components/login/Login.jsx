@@ -40,8 +40,8 @@ const Login = () => {
             password,
         });
 
-        // Correct comparison with === instead of =
-        if (res.data = true) {
+        // Check for the success property in the response
+        if (res.data.success) {
             // Navigate to the user page after successful login
             navigate("/user");
         } else {
@@ -52,6 +52,8 @@ const Login = () => {
         setError("Login failed. Please try again.");
     }
 };
+
+
 
 
   return (
