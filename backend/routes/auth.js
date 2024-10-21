@@ -21,21 +21,36 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// Login route
+
+
+
+// Login Route
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
+
     try {
+        // Check if the user exists by email
         const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ message: 'User not found' });
+        if (!user) {
+            // Return an error if the user does not exist
+            return res.status(400).json({ success: false, message: "Invalid credentials (email not found)" });
+        }
 
+        // Compare the input password with the stored hashed password
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+        if (!isMatch) {
+            // Return an error if the password does not match
+            return res.status(400).json({ success: false, message: "Invalid credentials (password mismatch)" });
+        }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token, user: { id: user._id, username: user.username, email: user.email } });
+        // Successful login, return success response
+        return res.status(200).json({ success: true, message: "Login successful", user });
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        // Handle any server errors
+        console.error("Server error: ", error);
+        return res.status(500).json({ success: false, message: "Server error" });
     }
 });
 
 module.exports = router;
+
