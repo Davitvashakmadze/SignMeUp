@@ -1,0 +1,13 @@
+# Global build settings
+[build]
+  # Directory where the build-ready HTML files and assets are located after running the build
+  base = "frontend" # Use the 'frontend' directory as the base
+  publish = "frontend/build"
+  # Command to build the project
+  command = "npm run build"
+
+# Redirects for React Router (single-page application routing)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
