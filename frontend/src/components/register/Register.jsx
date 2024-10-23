@@ -2,24 +2,35 @@ import { useState } from "react";
 import axios from "axios";
 import "./Register.scss";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate(); // Correct usage of useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Make the API request to register the user
       const res = await axios.post("http://localhost:5000/api/auth/register", {
         username,
         email,
         password,
       });
-      console.log(res.data);
-      // Handle success (redirect or store token)
+
+      // Assuming the response contains the registered user info (e.g., res.data.user)
+      const registeredUser = res.data.user;
+      
+      // Store the username and token in localStorage (if provided by the server)
+      localStorage.setItem("username", registeredUser.username);
+      localStorage.setItem("token", res.data.token); // Assuming the server returns a token
+
+      // Navigate to the user page after successful registration
+      navigate("/user");
     } catch (error) {
-      console.error(error.response.data);
+      console.error(error.response.data); // Log any error from the registration request
     }
   };
 
@@ -47,7 +58,7 @@ const Register = () => {
           />
           <button type="submit">Register</button>
         </form>
-        <Link to="/login">have an account? Login here</Link>
+        <Link to="/login">Already have an account? Login here</Link>
       </div>
     </div>
   );

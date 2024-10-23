@@ -38,7 +38,6 @@ const Login = () => {
         password,
       });
 
-      // Debugging: Check if response data contains the correct username
       console.log("Login Response:", res.data);
 
       // Check if the response contains success and user data
@@ -56,7 +55,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error(error.response?.data || "Error logging in");
-      setError("Login failed. Please try again.");
+      setError("Login failed. Please try again later");
     }
   };
 
