@@ -8,10 +8,39 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Correct usage of useNavigate
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
+  const validateForm = () => {
+    if (!username) {
+      setError("Username is required");
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      setError("Email is required");
+      return false;
+    } else if (!emailRegex.test(email)) {
+      setError("Please enter a valid email");
+      return false;
+    }
+
+    if (!password) {
+      setError("Password is required");
+      return false;
+    } else if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return false;
+    }
+
+    setError(""); // Clear errors if validation passes
+    return true;
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
     try {
       // Make the API request to register the user
       const res = await axios.post("http://localhost:5000/api/auth/register", {
@@ -22,7 +51,7 @@ const Register = () => {
 
       // Assuming the response contains the registered user info (e.g., res.data.user)
       const registeredUser = res.data.user;
-      
+
       // Store the username and token in localStorage (if provided by the server)
       localStorage.setItem("username", registeredUser.username);
       localStorage.setItem("token", res.data.token); // Assuming the server returns a token
@@ -38,6 +67,7 @@ const Register = () => {
     <div className="register-container-wrapper">
       <div className="register-container">
         <form onSubmit={handleSubmit}>
+          {error && <p className="error-message">{error}</p>}
           <input
             type="text"
             value={username}
