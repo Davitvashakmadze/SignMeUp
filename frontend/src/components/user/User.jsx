@@ -1,21 +1,22 @@
+// src/components/user/User.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../../supabaseClient";
 
 const User = () => {
-  const navigate = useNavigate(); // Correctly call useNavigate inside the component
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     localStorage.removeItem("username");
-    localStorage.removeItem("token"); // If you're using a token
-    navigate("/login"); // Navigate to the login page after logout
+    navigate("/login");
   };
 
-  // Retrieve the username from localStorage
   const username = localStorage.getItem("username");
 
   return (
     <div className="user-page">
-      <h1>Welcome to the {username} Page</h1>
+      <h1>Welcome, {username}!</h1>
       <p>You are successfully logged in!</p>
       <button onClick={handleLogout}>Logout</button>
     </div>

@@ -1,8 +1,8 @@
+// src/components/register/Register.jsx
 import { useState } from "react";
-import axios from "axios";
+import { supabase } from "../../supabaseClient";
+import { useNavigate, Link } from "react-router-dom";
 import "./Register.scss";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -11,55 +11,46 @@ const Register = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // Validate form inputs
   const validateForm = () => {
-    if (!username) {
-      setError("Username is required");
+    if (!username || !email || !password) {
+      setError("All fields are required");
       return false;
     }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email) {
-      setError("Email is required");
-      return false;
-    } else if (!emailRegex.test(email)) {
-      setError("Please enter a valid email");
-      return false;
-    }
-
-    if (!password) {
-      setError("Password is required");
-      return false;
-    } else if (password.length < 6) {
+    if (password.length < 6) {
       setError("Password must be at least 6 characters");
       return false;
     }
-
-    setError(""); // Clear errors if validation passes
+    setError("");
     return true;
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
+
     try {
-      // Make the API request to register the user
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
-        username,
+      // Register user with Supabase
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: { username },
+        },
       });
 
-      // Assuming the response contains the registered user info (e.g., res.data.user)
-      const registeredUser = res.data.user;
+      if (error) throw error; // Handle registration errors
 
-      // Store the username and token in localStorage (if provided by the server)
-      localStorage.setItem("username", registeredUser.username);
-      localStorage.setItem("token", res.data.token); // Assuming the server returns a token
+      if (data.user) {
+        // Store the username from metadata if available
+        localStorage.setItem("username", data.user.user_metadata.username || username);
+      }
 
-      // Navigate to the user page after successful registration
+      // Navigate to user page on successful registration
       navigate("/user");
     } catch (error) {
-      console.error(error.response.data); // Log any error from the registration request
+      console.error("Error signing up:", error.message);
+      setError("Registration failed: " + error.message);
     }
   };
 

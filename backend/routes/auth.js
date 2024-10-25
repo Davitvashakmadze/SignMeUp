@@ -1,41 +1,98 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const router = express.Router();
+// src/components/register/Register.jsx
+import { useState } from "react";
+import { supabase } from "../../supabaseClient";
+import { useNavigate, Link } from "react-router-dom";
+import "./Register.scss";
 
-// Registration route
-router.post('/register', async (req, res) => {
-    const { username, email, password } = req.body;
-    try {
-        // Check if the user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: 'User already exists' });
-        }
+const Register = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Create a new user
-        const newUser = new User({ username, email, password: hashedPassword });
-        await newUser.save();
-
-        // Generate a JWT token
-        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-        // Respond with the token and user data
-        res.status(201).json({
-            token,
-            user: {
-                id: newUser._id,
-                username: newUser.username,
-                email: newUser.email,
-            }
-        });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+  const validateForm = () => {
+    if (!username || !email || !password) {
+      setError("ყველა ველი სავალდებულოა");
+      return false;
     }
-});
+    if (password.length < 6) {
+      setError("პაროლი უნდა შეიცავდეს მინიმუმ 6 სიმბოლოს");
+      return false;
+    }
+    setError("");
+    return true;
+  };
 
-module.exports = router;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    try {
+      // ჯერ შეამოწმებს, არსებობს თუ არა მომხმარებელი ამავე მეილით
+      const { data: existingUser, error: fetchError } = await supabase
+        .from("users") // თუ უშუალოდ `auth.users` სჭირდება, დააკონკრეტეთ.
+        .select("email")
+        .eq("email", email)
+        .single();
+
+      if (fetchError && fetchError.code !== "PGRST116") {
+        throw fetchError;
+      }
+
+      if (existingUser) {
+        setError("ეს მეილი უკვე გამოყენებულია.");
+        return;
+      }
+
+      // თუ მეილი თავისუფალია, განაგრძეთ რეგისტრაცია
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { username },
+        },
+      });
+
+      if (error) throw error;
+
+      localStorage.setItem("username", username);
+      navigate("/user"); // გადამისამართება მომხმარებლის გვერდზე
+    } catch (error) {
+      console.error("Error signing up:", error.message);
+      setError("რეგისტრაცია ვერ შესრულდა: " + error.message);
+    }
+  };
+
+  return (
+    <div className="register-container-wrapper">
+      <div className="register-container">
+        <form onSubmit={handleSubmit}>
+          {error && <p className="error-message">{error}</p>}
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="მომხმარებლის სახელი"
+          />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="ელ-ფოსტა"
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="პაროლი"
+          />
+          <button type="submit">რეგისტრაცია</button>
+        </form>
+        <Link to="/login">უკვე გაქვთ ანგარიში? ავტორიზაცია აქ</Link>
+      </div>
+    </div>
+  );
+};
+
+export default Register;

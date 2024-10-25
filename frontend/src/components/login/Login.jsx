@@ -1,26 +1,18 @@
+// src/components/login/Login.jsx
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { supabase } from "../../supabaseClient";
+import { useNavigate, Link } from "react-router-dom";
 import "./Login.scss";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Hook to navigate programmatically
+  const navigate = useNavigate();
 
   const validateForm = () => {
-    if (!email) {
-      setError("Email is required");
-      return false;
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError("Please enter a valid email");
-      return false;
-    }
-    if (!password) {
-      setError("Password is required");
+    if (!email || !password) {
+      setError("All fields are required");
       return false;
     }
     return true;
@@ -28,34 +20,23 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
+    setError(""); 
 
-    if (!validateForm()) return; // Validate the form
+    if (!validateForm()) return;
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      console.log("Login Response:", res.data);
+      if (error) throw error;
 
-      // Check if the response contains success and user data
-      if (res.data && res.data.user && res.data.user.username) {
-        // Store the username in localStorage
-        localStorage.setItem("username", res.data.user.username);
-        
-        // Verify localStorage to check if it's being set correctly
-        console.log("Stored Username in localStorage:", localStorage.getItem("username"));
-
-        // Navigate to the user page after successful login
-        navigate("/user");
-      } else {
-        setError("Invalid credentials");
-      }
+      localStorage.setItem("username", data.user.user_metadata.username);
+      navigate("/user");
     } catch (error) {
-      console.error(error.response?.data || "Error logging in");
-      setError("Login failed. Please try again later");
+      console.error("Error logging in:", error.message);
+      setError("Login failed: " + error.message);
     }
   };
 
