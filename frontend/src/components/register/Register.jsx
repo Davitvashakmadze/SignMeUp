@@ -11,14 +11,13 @@ const Register = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Validate form inputs
   const validateForm = () => {
     if (!username || !email || !password) {
-      setError("All fields are required");
+      setError("ყველა ველი სავალდებულოა");
       return false;
     }
     if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+      setError("პაროლი უნდა შეიცავდეს მინიმუმ 6 სიმბოლოს");
       return false;
     }
     setError("");
@@ -30,7 +29,23 @@ const Register = () => {
     if (!validateForm()) return;
 
     try {
-      // Register user with Supabase
+      // ჯერ შეამოწმებს, არსებობს თუ არა მომხმარებელი ამავე მეილით
+      const { data: existingUser, error: fetchError } = await supabase
+        .from("users") // თუ უშუალოდ `auth.users` სჭირდება, დააკონკრეტეთ.
+        .select("email")
+        .eq("email", email)
+        .single();
+
+      if (fetchError && fetchError.code !== "PGRST116") {
+        throw fetchError;
+      }
+
+      if (existingUser) {
+        setError("ეს მეილი უკვე გამოყენებულია.");
+        return;
+      }
+
+      // თუ მეილი თავისუფალია, განაგრძეთ რეგისტრაცია
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -39,18 +54,13 @@ const Register = () => {
         },
       });
 
-      if (error) throw error; // Handle registration errors
+      if (error) throw error;
 
-      if (data.user) {
-        // Store the username from metadata if available
-        localStorage.setItem("username", data.user.user_metadata.username || username);
-      }
-
-      // Navigate to user page on successful registration
-      navigate("/user");
+      localStorage.setItem("username", username);
+      navigate("/user"); // გადამისამართება მომხმარებლის გვერდზე
     } catch (error) {
       console.error("Error signing up:", error.message);
-      setError("Registration failed: " + error.message);
+      setError("რეგისტრაცია ვერ შესრულდა: " + error.message);
     }
   };
 
@@ -63,23 +73,23 @@ const Register = () => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
+            placeholder="მომხმარებლის სახელი"
           />
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
+            placeholder="ელ-ფოსტა"
           />
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
+            placeholder="პაროლი"
           />
-          <button type="submit">Register</button>
+          <button type="submit">რეგისტრაცია</button>
         </form>
-        <Link to="/login">Already have an account? Login here</Link>
+        <Link to="/login">უკვე გაქვთ ანგარიში? ავტორიზაცია აქ</Link>
       </div>
     </div>
   );
