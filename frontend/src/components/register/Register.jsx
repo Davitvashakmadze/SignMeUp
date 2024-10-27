@@ -3,7 +3,6 @@ import { useState } from "react";
 import { supabase } from "../../supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
 import "./Register.scss";
-import backgroundImage from "../../media/6057485.jpg";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -59,16 +58,7 @@ const Register = () => {
   };
 
   return (
-    <div
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        height: "100vh",
-        width: "100%",
-      }}
-      className="register-container-wrapper"
-    >
+    <div className="register-container-wrapper">
       <div className="register-container">
         <form onSubmit={handleSubmit}>
           {error && <p className="error-message">{error}</p>}

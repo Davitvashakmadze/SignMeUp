@@ -3,7 +3,6 @@ import { useState } from "react";
 import { supabase } from "../../supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.scss";
-import backgroundImage from '../../media/6057485.jpg'
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -21,7 +20,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); 
+    setError("");
 
     if (!validateForm()) return;
 
@@ -42,13 +41,7 @@ const Login = () => {
   };
 
   return (
-    <div  style={{
-      backgroundImage: `url(${backgroundImage})`,
-      backgroundSize: 'cover',        
-      backgroundPosition: 'center',
-      height: '100vh',                
-      width: '100%', 
-    }} className="login-container-wrapper">
+    <div className="login-container-wrapper">
       <div className="login-container">
         <form onSubmit={handleSubmit}>
           {error && <p className="error-message">{error}</p>}
