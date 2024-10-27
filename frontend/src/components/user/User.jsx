@@ -30,8 +30,8 @@ const User = () => {
       <div className="user-page">
         <h1>Welcome, {username}!</h1>
         <p>You are successfully logged in!</p>
+        <button onClick={handleLogout}>Logout</button>
       </div>
-      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };
