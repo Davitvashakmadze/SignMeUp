@@ -3,6 +3,7 @@ import { useState } from "react";
 import { supabase } from "../../supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
 import "./Register.scss";
+import backgroundImage from "../../media/6057485.jpg";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -43,7 +44,10 @@ const Register = () => {
 
       if (data.user) {
         // Store the username from metadata if available
-        localStorage.setItem("username", data.user.user_metadata.username || username);
+        localStorage.setItem(
+          "username",
+          data.user.user_metadata.username || username
+        );
       }
 
       // Navigate to user page on successful registration
@@ -55,7 +59,16 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container-wrapper">
+    <div
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "100vh",
+        width: "100%",
+      }}
+      className="register-container-wrapper"
+    >
       <div className="register-container">
         <form onSubmit={handleSubmit}>
           {error && <p className="error-message">{error}</p>}

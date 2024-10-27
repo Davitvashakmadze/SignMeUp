@@ -1,5 +1,10 @@
 .user-page-wrapper {
-    
+    h1{
+        color: antiquewhite;
+    }
+    p{
+        color: antiquewhite;
+    }
   .user-page {
     display: flex;
     flex-direction: column;
@@ -11,7 +16,7 @@
     top: 0;
     right: 0;
     padding: 10px;
-    background-color: #4caf50;
+    background-color: #af684c;
     color: white;
     border: none;
     border-radius: 4px;
@@ -20,7 +25,7 @@
     transition: 0.3s ease-in-out;
 
     &:hover {
-      background-color: #45a049;
+      background-color: #a06045;
     }
   }
 }
