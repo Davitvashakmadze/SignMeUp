@@ -2,6 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
+import "./User.scss";
 
 const User = () => {
   const navigate = useNavigate();
@@ -15,9 +16,11 @@ const User = () => {
   const username = localStorage.getItem("username");
 
   return (
-    <div className="user-page">
-      <h1>Welcome, {username}!</h1>
-      <p>You are successfully logged in!</p>
+    <div className="user-page-wrapper">
+      <div className="user-page">
+        <h1>Welcome, {username}!</h1>
+        <p>You are successfully logged in!</p>
+      </div>
       <button onClick={handleLogout}>Logout</button>
     </div>
   );
