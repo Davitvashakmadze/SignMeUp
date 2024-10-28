@@ -3,6 +3,8 @@ import { useState } from "react";
 import { supabase } from "../../supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
 import "./Register.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -10,6 +12,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   // Validate form inputs
   const validateForm = () => {
@@ -57,6 +60,10 @@ const Register = () => {
     }
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className="register-container-wrapper">
       <div className="register-container">
@@ -74,12 +81,25 @@ const Register = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
           />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-          />
+          <div className="password-input-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+            />
+            <button
+              type="button"
+              onClick={toggleShowPassword}
+              className="show-password-button"
+            >
+              {showPassword ? (
+                <FontAwesomeIcon icon={faEyeSlash} />
+              ) : (
+                <FontAwesomeIcon icon={faEye} />
+              )}
+            </button>
+          </div>
           <button type="submit">Register</button>
         </form>
         <Link to="/login">Already have an account? Login here</Link>
