@@ -1,5 +1,5 @@
 .login-container-wrapper {
-  p{
+  p {
     color: red;
   }
   width: 100%;
@@ -22,7 +22,21 @@
         border: 1px solid #ccc;
         border-radius: 4px;
       }
-
+      .password-input-wrapper {
+        width: 107%;
+        position: relative;
+        button {
+          top: 22%;
+          right: 25px;
+          margin: 0;
+          color: black;
+          position: absolute;
+          width: 0;
+          padding: 0;
+          color: none;
+        }
+        display: flex;
+      }
       button {
         width: 45%;
         padding: 10px;
