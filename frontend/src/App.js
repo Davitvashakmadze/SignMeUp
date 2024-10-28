@@ -7,7 +7,7 @@ import {
 import Login from "./components/login/Login";
 import Register from "./components/register/Register";
 import User from "./components/user/User"; // Import the user page
-import backgroundImage from './media/6057485.jpg'
+import backgroundImage from './media/3168310.jpg'
 
 function App() {
   return (
