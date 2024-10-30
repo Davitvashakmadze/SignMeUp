@@ -1,4 +1,3 @@
-// src/components/login/Login.jsx
 import { useState } from "react";
 import { supabase } from "../../supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
@@ -11,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [shake, setShake] = useState(false);
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -24,6 +24,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setShake(false);
 
     if (!validateForm()) return;
 
@@ -40,6 +41,10 @@ const Login = () => {
     } catch (error) {
       console.error("Error logging in:", error.message);
       setError("Login failed: " + error.message);
+      setShake(true); // Trigger shake animation on error
+
+      // Remove shake effect after animation completes
+      setTimeout(() => setShake(false), 500);
     }
   };
 
@@ -61,8 +66,8 @@ const Login = () => {
               placeholder="Email"
             />
           </div>
-          <div className="password-input-wrapper">
-          <FontAwesomeIcon className="faLock" icon={faLock} />
+          <div className={`password-input-wrapper ${shake ? "shake" : ""}`}>
+            <FontAwesomeIcon className="faLock" icon={faLock} />
             <input
               type={showPassword ? "text" : "password"}
               value={password}
