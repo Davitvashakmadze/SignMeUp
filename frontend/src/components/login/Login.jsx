@@ -4,7 +4,7 @@ import { supabase } from "../../supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -52,13 +52,17 @@ const Login = () => {
       <div className="login-container">
         <form onSubmit={handleSubmit}>
           {error && <p className="error-message">{error}</p>}
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-          />
+          <div className="user-input-wrapper">
+            <FontAwesomeIcon className="faUser" icon={faUser} />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+            />
+          </div>
           <div className="password-input-wrapper">
+          <FontAwesomeIcon className="faLock" icon={faLock} />
             <input
               type={showPassword ? "text" : "password"}
               value={password}

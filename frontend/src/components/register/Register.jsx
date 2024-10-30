@@ -4,7 +4,13 @@ import { supabase } from "../../supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
 import "./Register.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faEnvelope,
+  faUser,
+  faLock,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -69,19 +75,26 @@ const Register = () => {
       <div className="register-container">
         <form onSubmit={handleSubmit}>
           {error && <p className="error-message">{error}</p>}
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
-          />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-          />
+          <div className="user-input-wrapper">
+            <FontAwesomeIcon className="faUser" icon={faUser} />
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Username"
+            />
+          </div>
+          <div className="email-input-wrapper">
+            <FontAwesomeIcon className="faEnvelope" icon={faEnvelope} />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+            />
+          </div>
           <div className="password-input-wrapper">
+            <FontAwesomeIcon className="faLock" icon={faLock} />
             <input
               type={showPassword ? "text" : "password"}
               value={password}

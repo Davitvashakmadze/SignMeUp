@@ -15,15 +15,17 @@
       align-items: center;
       flex-direction: column;
       input {
+        padding: 8px 0 8px 30px; /* top & bottom: 8px, left: 30px, right: 0 */
         display: block;
         width: 100%;
-        margin-bottom: 10px; /* Adds 10px gap between inputs */
-        padding: 8px;
+        margin-bottom: 10px; /* Gap between inputs */
         border: 1px solid #ccc;
         border-radius: 4px;
+        box-sizing: border-box; /* Ensures padding doesn't affect width */
       }
+
       .password-input-wrapper {
-        width: 107%;
+        width: 100%;
         position: relative;
         button {
           top: 22%;
@@ -51,6 +53,25 @@
         &:hover {
           background-color: #45a049;
         }
+      }
+      .user-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        .faUser {
+          color: rgb(8, 102, 134);
+          position: absolute;
+          bottom: 42%;
+          left: 4%;
+        }
+       
+      }
+      .faLock {
+        color: rgb(8, 102, 134);
+        position: absolute;
+        bottom: 42%;
+        left: 4%;
       }
     }
   }
