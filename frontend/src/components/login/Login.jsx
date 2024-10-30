@@ -41,7 +41,7 @@ const Login = () => {
     } catch (error) {
       console.error("Error logging in:", error.message);
       setError("Login failed: " + error.message);
-      setShake(true); // Trigger shake animation on error
+      setShake(true); 
 
       // Remove shake effect after animation completes
       setTimeout(() => setShake(false), 500);

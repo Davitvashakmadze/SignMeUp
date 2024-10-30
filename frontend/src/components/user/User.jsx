@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import "./User.scss";
-import backgroundImage from "../../media/6057485.jpg";
+// import backgroundImage from "../../media/6057485.jpg";
 
 const User = () => {
   const navigate = useNavigate();
@@ -18,13 +18,6 @@ const User = () => {
 
   return (
     <div
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        height: "100vh",
-        width: "100%",
-      }}
       className="user-page-wrapper"
     >
       <div className="user-page">
